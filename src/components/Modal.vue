@@ -3,9 +3,6 @@ import { ref } from "vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { formatearMoneda } from "@/helpers";
 const kiosko = useKioskoStore();
-
-const cantidad = ref(1);
-
 defineProps({
   modal: {
     type: Boolean,
@@ -13,13 +10,23 @@ defineProps({
   },
 });
 
+const cantidad = ref(1);
+
 const incrementar = () => {
   if (cantidad.value >= 5) return;
   cantidad.value++;
 };
 const restar = () => {
-    if(cantidad.value <=1) return;
-    cantidad.value--;
+  if (cantidad.value <= 1) return;
+  cantidad.value--;
+};
+const agregarPedido = () => {
+  const pedido = {
+    ...kiosko.producto,
+    cantidad: cantidad.value,
+  };
+  kiosko.handleAgregarPedido(pedido);
+  kiosko.handleClickModal();
 }
 </script>
 
@@ -88,15 +95,14 @@ const restar = () => {
             </button>
           </div>
           <button
-        type="button"
-        class="bg-indigo-600 text-white px-4 py-2 mt-5 rounded hover:bg-indigo-800"
-      >
-        Añadir al pedido
-      </button>
+            type="button"
+            class="bg-indigo-600 text-white px-4 py-2 mt-5 rounded-md uppercase font-black hover:bg-indigo-800"
+            @click="agregarPedido"
+          >
+            Añadir al pedido
+          </button>
         </div>
-        
       </div>
-
     </div>
   </div>
 </template>
