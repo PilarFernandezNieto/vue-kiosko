@@ -1,11 +1,13 @@
 <script setup>
 import Categoria from "./Categoria.vue";
-import { categorias } from "@/data/categorias";
+import { useKioskoStore } from "@/stores/kioskoStore";
+const kioskoStore = useKioskoStore();
+const {categorias} = kioskoStore;
 </script>
 <template>
   <aside class="md:w-72">
     <div class="p-4">
-      <img src="/public/img/logo.svg" alt="imagen logo" class="w-40" />
+      <img src="/img/logo.svg" alt="imagen logo" class="w-40" />
     </div>
     <div class="mt-10">
       <div v-for="categoria in categorias" :key="categoria.id">
