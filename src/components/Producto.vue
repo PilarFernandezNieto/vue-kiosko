@@ -1,6 +1,9 @@
 <script setup>
 import { defineProps } from "vue";
 import { formatearMoneda } from "@/helpers";
+import { useKioskoStore } from "@/stores/kioskoStore";
+
+const kiosko = useKioskoStore();
 
 const props = defineProps({
   producto: {
@@ -19,7 +22,7 @@ const { nombre, imagen, precio } = props.producto;
       <p class="mt-5 font-black text-4xl text-amber-500">
         {{ formatearMoneda(precio) }}
       </p>
-      <button type="button" class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-sm">Añadir</button>
+      <button type="button" class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-sm" @click="kiosko.handleClickModal()">Añadir</button>
     </div>
   </div>
 </template>

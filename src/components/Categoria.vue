@@ -2,12 +2,14 @@
 import { useKioskoStore } from "@/stores/kioskoStore";
 
 const kiosko = useKioskoStore();
+
 defineProps({
   categoria: {
     type: Object,
     required: true,
   },
 });
+
 const resaltarCategoriaActual = (categoria) =>
   kiosko.categoriaActual?.id === categoria.id ? "bg-amber-400" : "bg-white";
 </script>
