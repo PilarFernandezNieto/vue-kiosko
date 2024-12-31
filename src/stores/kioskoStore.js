@@ -5,6 +5,7 @@ import { categorias as categoriasDB } from "@/data/categorias";
 export const useKioskoStore = defineStore("kiosko", () => {
 
 const categorias = ref(categoriasDB);
+const producto = ref({});
 const categoriaActual= ref(categorias.value[0]);
 const modal = ref(false);
 
@@ -18,11 +19,17 @@ const handleClickModal = () => {
     modal.value = !modal.value;
 }
 
+const handleSetProducto = (nuevoProducto) => {
+    producto.value = nuevoProducto;
+}
+
   return {
     categorias,
+    producto,
     categoriaActual,
     handleClickCategoria,
     modal,
-    handleClickModal
+    handleClickModal,
+    handleSetProducto
   };
 });

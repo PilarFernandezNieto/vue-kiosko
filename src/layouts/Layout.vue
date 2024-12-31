@@ -1,14 +1,14 @@
 <script setup>
-import { watch } from "vue";
+import { watch, watchEffect } from "vue";
 import { RouterView } from "vue-router";
 import Sidebar from "@/components/Sidebar.vue";
 import Resumen from "@/components/Resumen.vue";
+import Modal from "@/components/Modal.vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 
 const kiosko = useKioskoStore();
-watch(() => kiosko.modal, (nuevoValor) => {
-  console.log("El modal cambió:", nuevoValor);
-});
+
+
 
 </script>
 <template>
@@ -19,6 +19,7 @@ watch(() => kiosko.modal, (nuevoValor) => {
     </main>
     <Resumen />
   </div>
+  <Modal :modal="kiosko.modal" />
 </template>
 
 <style lang="scss" scoped></style>

@@ -5,24 +5,30 @@ import { useKioskoStore } from "@/stores/kioskoStore";
 
 const kiosko = useKioskoStore();
 
-const props = defineProps({
+defineProps({
   producto: {
     type: Object,
     required: true,
   },
 });
-const { nombre, imagen, precio } = props.producto;
+
 </script>
 
 <template>
   <div class="border p-3 shadow bg-white">
-    <img :src="`/img/${imagen}.jpg`" :alt="`imagen_${nombre}`" class="w-full" />
+    <img :src="`/img/${producto.imagen}.jpg`" :alt="`imagen_${producto.nombre}`" class="w-full" />
     <div class="py-5">
-      <h3 class="text-2xl font-bold xl:min-h-24">{{ nombre }}</h3>
+      <h3 class="text-2xl font-bold xl:min-h-24">{{ producto.nombre }}</h3>
       <p class="mt-5 font-black text-4xl text-amber-500">
-        {{ formatearMoneda(precio) }}
+        {{ formatearMoneda(producto.precio) }}
       </p>
-      <button type="button" class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-sm" @click="kiosko.handleClickModal()">Añadir</button>
+      <button
+        type="button"
+        class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-sm"
+        @click="kiosko.handleClickModal(), kiosko.handleSetProducto(producto)"
+      >
+        Añadir
+      </button>
     </div>
   </div>
 </template>
