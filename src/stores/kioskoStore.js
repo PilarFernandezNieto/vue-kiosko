@@ -1,6 +1,7 @@
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { categorias as categoriasDB } from "@/data/categorias";
+import { useToastStore } from "./toastStore";
 
 export const useKioskoStore = defineStore("kiosko", () => {
   const categorias = ref(categoriasDB);
@@ -9,6 +10,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
   const pedido = ref([]);
   const categoriaActual = ref(categorias.value[0]);
   const modal = ref(false);
+  const toast = useToastStore();
 
   const seleccionarCategoria = (id) => {
     const categoria = categorias.value.filter(
@@ -44,8 +46,14 @@ export const useKioskoStore = defineStore("kiosko", () => {
       ...productoActualizar,
       cantidad: productoActualizar.cantidad,
     };
-    // cantidad.value = productoActualizar.cantidad;
     toggleModal();
+  };
+  const eliminarProductoPedido = (id) => {
+    const pedidoActualizado = pedido.value.filter(
+      (producto) => producto.id !== id
+    );
+    pedido.value = pedidoActualizado;
+    toast.mostrarExito("Producto eliminado del pedido");
   };
 
   return {
@@ -60,5 +68,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     seleccionarProducto,
     agregarPedido,
     editarCantidad,
+    eliminarProductoPedido,
   };
 });

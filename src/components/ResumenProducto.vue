@@ -40,6 +40,7 @@ defineProps({
       <button
         type="button"
         class="bg-red-700 p-2 text-white rounded-md font-bold uppercase shadow-md text-center"
+        @click="kiosko.eliminarProductoPedido(producto.id)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
