@@ -2,7 +2,11 @@
 import { ref, computed } from "vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { formatearMoneda } from "@/helpers";
+import { useToastStore } from "@/stores/toastStore";
+
 const kiosko = useKioskoStore();
+const toast = useToastStore();
+
 defineProps({
   modal: {
     type: Boolean,
@@ -33,6 +37,7 @@ const agregarPedidoAResumen = () => {
     kiosko.pedido[existePedido].cantidad += cantidad.value;
     kiosko.agregarPedido(kiosko.pedido[existePedido]);
     kiosko.toggleModal();
+    toast.mostrarExito("Producto actualizado en el pedido");
   } else {
     const pedido = {
       ...kiosko.producto,
@@ -40,6 +45,7 @@ const agregarPedidoAResumen = () => {
     };
     kiosko.agregarPedido(pedido);
     kiosko.toggleModal();
+    toast.mostrarExito("Producto añadido al pedido");
   }
 
   
