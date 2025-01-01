@@ -5,6 +5,7 @@ import { categorias as categoriasDB } from "@/data/categorias";
 export const useKioskoStore = defineStore("kiosko", () => {
   const categorias = ref(categoriasDB);
   const producto = ref({});
+  const cantidad = ref(1);
   const pedido = ref([]);
   const categoriaActual = ref(categorias.value[0]);
   const modal = ref(false);
@@ -35,9 +36,22 @@ export const useKioskoStore = defineStore("kiosko", () => {
     }
   };
 
+  const editarCantidad = (id) => {
+    const productoActualizar = pedido.value.find(
+      (producto) => producto.id === id
+    );
+    producto.value = {
+      ...productoActualizar,
+      cantidad: productoActualizar.cantidad,
+    };
+    // cantidad.value = productoActualizar.cantidad;
+    toggleModal();
+  };
+
   return {
     categorias,
     producto,
+    cantidad,
     pedido,
     categoriaActual,
     seleccionarCategoria,
@@ -45,5 +59,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     toggleModal,
     seleccionarProducto,
     agregarPedido,
+    editarCantidad,
   };
 });

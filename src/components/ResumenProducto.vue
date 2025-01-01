@@ -1,5 +1,9 @@
 <script setup>
 import { formatearMoneda } from '@/helpers';
+import { useKioskoStore } from '@/stores/kioskoStore';
+
+const kiosko = useKioskoStore();
+
 defineProps({
   producto: {
     type: Object,
@@ -20,6 +24,7 @@ defineProps({
       <button
         type="button"
         class="bg-sky-700 p-2 text-white rounded-md font-bold uppercase shadow-md text-center"
+        @click="kiosko.editarCantidad(producto.id)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -6,6 +6,12 @@ import { useToastStore } from "@/stores/toastStore";
 
 const kiosko = useKioskoStore();
 const toast = useToastStore();
+const cantidad = ref(
+  kiosko.pedido.find((producto) => producto.id === kiosko.producto.id)
+    ? kiosko.pedido.find((producto) => producto.id === kiosko.producto.id)
+        .cantidad
+    : 1
+);
 
 defineProps({
   modal: {
@@ -14,12 +20,9 @@ defineProps({
   },
 });
 
-const cantidad = ref(1);
-
 const edicion = computed(() => {
   return kiosko.pedido.some((producto) => producto.id === kiosko.producto.id);
 });
-
 
 const incrementar = () => {
   if (cantidad.value >= 5) return;
@@ -33,8 +36,9 @@ const agregarPedidoAResumen = () => {
   const existePedido = kiosko.pedido.findIndex(
     (producto) => producto.id === kiosko.producto.id
   );
+
   if (existePedido >= 0) {
-    kiosko.pedido[existePedido].cantidad += cantidad.value;
+    kiosko.pedido[existePedido].cantidad = cantidad.value;
     kiosko.agregarPedido(kiosko.pedido[existePedido]);
     kiosko.toggleModal();
     toast.mostrarExito("Producto actualizado en el pedido");
@@ -47,8 +51,6 @@ const agregarPedidoAResumen = () => {
     kiosko.toggleModal();
     toast.mostrarExito("Producto añadido al pedido");
   }
-
-  
 };
 </script>
 
@@ -121,7 +123,7 @@ const agregarPedidoAResumen = () => {
             class="bg-indigo-600 text-white px-4 py-2 mt-5 rounded-md uppercase font-black hover:bg-indigo-800"
             @click="agregarPedidoAResumen"
           >
-           {{edicion ? 'Guardar cambios' : 'Agregar al pedido'}}
+            {{ edicion ? "Guardar cambios" : "Agregar al pedido" }}
           </button>
         </div>
       </div>
