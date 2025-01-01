@@ -19,7 +19,7 @@ const kiosko = useKioskoStore();
     </main>
     <Resumen />
   </div>
-  <Modal :modal="kiosko.modal" />
+  <Modal v-if="kiosko.modal" :modal="kiosko.modal" />
 </template>
 
 <style lang="scss" scoped></style>

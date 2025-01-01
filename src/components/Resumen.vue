@@ -3,6 +3,8 @@ import { useKioskoStore } from "@/stores/kioskoStore";
 import SubmitInput from "./SubmitInput.vue";
 import ResumenProducto from "./ResumenProducto.vue";
 const kiosko = useKioskoStore();
+
+
 </script>
 <template>
   <aside class="w-72 h-screen overflow-y_scroll p-5">

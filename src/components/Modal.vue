@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { formatearMoneda } from "@/helpers";
 const kiosko = useKioskoStore();
@@ -12,6 +12,11 @@ defineProps({
 
 const cantidad = ref(1);
 
+const edicion = computed(() => {
+  return kiosko.pedido.some((producto) => producto.id === kiosko.producto.id);
+});
+
+
 const incrementar = () => {
   if (cantidad.value >= 5) return;
   cantidad.value++;
@@ -20,14 +25,25 @@ const restar = () => {
   if (cantidad.value <= 1) return;
   cantidad.value--;
 };
-const agregarPedido = () => {
-  const pedido = {
-    ...kiosko.producto,
-    cantidad: cantidad.value,
-  };
-  kiosko.handleAgregarPedido(pedido);
-  kiosko.handleClickModal();
-}
+const agregarPedidoAResumen = () => {
+  const existePedido = kiosko.pedido.findIndex(
+    (producto) => producto.id === kiosko.producto.id
+  );
+  if (existePedido >= 0) {
+    kiosko.pedido[existePedido].cantidad += cantidad.value;
+    kiosko.agregarPedido(kiosko.pedido[existePedido]);
+    kiosko.toggleModal();
+  } else {
+    const pedido = {
+      ...kiosko.producto,
+      cantidad: cantidad.value,
+    };
+    kiosko.agregarPedido(pedido);
+    kiosko.toggleModal();
+  }
+
+  
+};
 </script>
 
 <template>
@@ -42,7 +58,7 @@ const agregarPedido = () => {
       <button
         type="button"
         class="text-gray-500 hover:text-gray-800 absolute top-4 right-4"
-        @click="kiosko.handleClickModal"
+        @click="kiosko.toggleModal"
       >
         <i class="fa-regular fa-circle-xmark text-2xl"></i>
       </button>
@@ -97,9 +113,9 @@ const agregarPedido = () => {
           <button
             type="button"
             class="bg-indigo-600 text-white px-4 py-2 mt-5 rounded-md uppercase font-black hover:bg-indigo-800"
-            @click="agregarPedido"
+            @click="agregarPedidoAResumen"
           >
-            Añadir al pedido
+           {{edicion ? 'Guardar cambios' : 'Agregar al pedido'}}
           </button>
         </div>
       </div>

@@ -17,7 +17,7 @@ const resaltarCategoriaActual = (categoria) =>
   <div
     class="flex items-center gap-4 border w-full p-3 hover:bg-amber-400 cursor-pointer"
     :class="resaltarCategoriaActual(categoria)"
-    @click="kiosko.handleClickCategoria(categoria.id)"
+    @click="kiosko.seleccionarCategoria(categoria.id)"
   >
     <img
       :src="`/img/icono_${categoria.icono}.svg`"

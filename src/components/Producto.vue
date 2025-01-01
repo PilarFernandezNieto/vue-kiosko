@@ -25,7 +25,7 @@ defineProps({
       <button
         type="button"
         class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md"
-        @click="kiosko.handleClickModal(), kiosko.handleSetProducto(producto)"
+        @click="kiosko.toggleModal(), kiosko.seleccionarProducto(producto)"
       >
         Añadir
       </button>

@@ -9,23 +9,30 @@ export const useKioskoStore = defineStore("kiosko", () => {
   const categoriaActual = ref(categorias.value[0]);
   const modal = ref(false);
 
-  const handleClickCategoria = (id) => {
+  const seleccionarCategoria = (id) => {
     const categoria = categorias.value.filter(
       (categoria) => categoria.id === id
     )[0];
     categoriaActual.value = categoria;
   };
 
-  const handleClickModal = () => {
+  const toggleModal = () => {
     modal.value = !modal.value;
   };
 
-  const handleSetProducto = (nuevoProducto) => {
+  const seleccionarProducto = (nuevoProducto) => {
     producto.value = nuevoProducto;
   };
 
-  const handleAgregarPedido = ({ categoria_id, imagen, ...producto }) => {
-    pedido.value = [...pedido.value, producto];
+  const agregarPedido = (producto) => {
+    if (pedido.value.some((pedidoState) => pedidoState.id === producto.id)) {
+      const pedidoActualizado = pedido.value.map((pedidoState) =>
+        pedidoState.id === producto.id ? producto : pedidoState
+      );
+      pedido.value = pedidoActualizado;
+    } else {
+      pedido.value = [...pedido.value, producto];
+    }
   };
 
   return {
@@ -33,10 +40,10 @@ export const useKioskoStore = defineStore("kiosko", () => {
     producto,
     pedido,
     categoriaActual,
-    handleClickCategoria,
+    seleccionarCategoria,
     modal,
-    handleClickModal,
-    handleSetProducto,
-    handleAgregarPedido,
+    toggleModal,
+    seleccionarProducto,
+    agregarPedido,
   };
 });
