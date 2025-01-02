@@ -1,18 +1,34 @@
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { defineStore } from "pinia";
-import { categorias as categoriasDB } from "@/data/categorias";
 import { useToastStore } from "./toastStore";
+import clienteAxios from "@/config/axios";
 
 export const useKioskoStore = defineStore("kiosko", () => {
-  const categorias = ref(categoriasDB);
+  const categorias = ref([]);
   const producto = ref({});
   const cantidad = ref(1);
   const pedido = ref([]);
-  const categoriaActual = ref(categorias.value[0]);
+  const categoriaActual = ref({});
   const modal = ref(false);
   const toast = useToastStore();
 
-  const seleccionarCategoria = (id) => {
+  onMounted(() => {
+    obtenerCategorias();
+  });
+
+  const obtenerCategorias = async () => {
+    try {
+      const { data } = await clienteAxios('/api/categorias');
+      categorias.value = data.data;
+      categoriaActual.value = data.data[0];
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  const seleccionarCategoriaActual = (id) => {
     const categoria = categorias.value.filter(
       (categoria) => categoria.id === id
     )[0];
@@ -62,7 +78,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
     cantidad,
     pedido,
     categoriaActual,
-    seleccionarCategoria,
+    seleccionarCategoriaActual,
     modal,
     toggleModal,
     seleccionarProducto,

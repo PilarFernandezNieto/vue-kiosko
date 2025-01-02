@@ -17,11 +17,11 @@ const resaltarCategoriaActual = (categoria) =>
   <div
     class="flex items-center gap-4 border w-full p-3 hover:bg-amber-400 cursor-pointer"
     :class="resaltarCategoriaActual(categoria)"
-    @click="kiosko.seleccionarCategoria(categoria.id)"
+    @click="kiosko.seleccionarCategoriaActual(categoria.id)"
   >
     <img
       :src="`/img/icono_${categoria.icono}.svg`"
-      alt="icono_{{ categoria.nombre }}"
+      :alt="'icono_' + categoria.nombre"
       class="w-12"
     />
     <p class="text-lg font-bold cursor-pointer truncate">

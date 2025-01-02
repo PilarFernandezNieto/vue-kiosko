@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from "vue";
 import { formatearMoneda } from "@/helpers";
 import { useKioskoStore } from "@/stores/kioskoStore";
 
