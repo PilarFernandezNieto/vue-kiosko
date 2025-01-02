@@ -18,15 +18,13 @@ export const useKioskoStore = defineStore("kiosko", () => {
 
   const obtenerCategorias = async () => {
     try {
-      const { data } = await clienteAxios('/api/categorias');
+      const { data } = await clienteAxios("/api/categorias");
       categorias.value = data.data;
       categoriaActual.value = data.data[0];
     } catch (error) {
       console.log(error);
     }
   };
-
-
 
   const seleccionarCategoriaActual = (id) => {
     const categoria = categorias.value.filter(
