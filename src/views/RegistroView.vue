@@ -15,8 +15,8 @@ const errores = ref({});
 
 const handleSubmit = async () => {
   try {
-    const respuesta = await clienteAxios.post("/api/registro", datos);
-    console.log(respuesta);
+    const { data } = await clienteAxios.post("/api/registro", datos);
+    console.log(data.token);
   } catch (error) {
     errores.value = Object.values(error.response.data.errors);
     console.log(errores.value);
@@ -30,9 +30,11 @@ const handleSubmit = async () => {
     <form action="" @submit.prevent="handleSubmit" method="post" novalidate>
       <div v-if="errores" class="my-4">
         <div v-for="(error, index) in errores" :key="index">
-        <Alerta v-if="error.length < 2"> {{ error[0] }}</Alerta>
+          <Alerta v-if="error.length < 2"> {{ error[0] }}</Alerta>
           <div v-if="error.length >= 2">
-            <Alerta v-for="(errorPassword, index) in error" :key="index">{{ errorPassword }}</Alerta>
+            <Alerta v-for="(errorPassword, index) in error" :key="index">{{
+              errorPassword
+            }}</Alerta>
           </div>
         </div>
       </div>
@@ -70,7 +72,7 @@ const handleSubmit = async () => {
           v-model="datos.password"
         />
         <div v-if="errores">
-          <p v-for="errorPassword in errores.password" >
+          <p v-for="errorPassword in errores.password">
             {{ errorPassword[0] }}
           </p>
         </div>
