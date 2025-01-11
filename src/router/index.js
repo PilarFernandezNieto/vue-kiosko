@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
 import Layout from "@/layouts/Layout.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
 
@@ -13,6 +14,7 @@ const router = createRouter({
         {
           path: "",
           name: "Inicio",
+          meta: { requiresAuth: true },
           component: () => import("@/views/InicioView.vue"),
         },
       ],
@@ -36,5 +38,21 @@ const router = createRouter({
     },
   ],
 });
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+  const requiresAuth = to.matched.some((url) => url.meta.requiresAuth)
+  if(requiresAuth){
+    try {
+      await authStore.auth()
+      next()
+    } catch (error) {
+      next({name: "login"})
+    }
+  } else {
+    next()
+  }
+  
+})
+
 
 export default router;

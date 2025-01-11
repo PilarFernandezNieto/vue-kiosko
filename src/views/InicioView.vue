@@ -6,8 +6,6 @@ import { useKioskoStore } from "@/stores/kioskoStore";
 import Producto from "@/components/Producto.vue";
 
 const kiosko = useKioskoStore();
-const queryClient = useQueryClient();
-
 const getProductos = async () => {
   try {
     const { data } = await clienteAxios("/api/productos");

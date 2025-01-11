@@ -1,25 +1,31 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { RouterLink } from "vue-router";
-import clienteAxios from "@/config/axios";
+import { RouterLink, useRouter } from "vue-router";
+
+import { useAuthStore } from "@/stores/authStore";
 import SubmitInput from "@/components/SubmitInput.vue";
 import Alerta from "@/components/Alerta.vue";
 
+const authStore = useAuthStore();
+const router = useRouter();
 const datos = reactive({
   email: "",
   password: "",
 });
 const errores = ref({});
 
+
 const handleSubmit = async () => {
   try {
-    const { data } = await clienteAxios.post("/api/login", datos);
-    localStorage.setItem("AUTH_TOKEN", data.token);
-    errores.value = [];
+    await authStore.login(datos, errores);
+    console.log('Ahora redirecciona');
+    
+    await router.push({ name: "Inicio" });
   } catch (error) {
-    errores.value = Object.values(error.response.data.errors);
+    console.error("Error iniciando sesión");
   }
 };
+
 </script>
 <template>
   <h1 class="text-4xl font-black">Iniciar sesión</h1>

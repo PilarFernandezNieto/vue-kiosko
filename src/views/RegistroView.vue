@@ -1,9 +1,11 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { RouterLink } from "vue-router";
-import clienteAxios from "@/config/axios";
+import { useAuthStore } from "@/stores/authStore";
 import SubmitInput from "@/components/SubmitInput.vue";
 import Alerta from "@/components/Alerta.vue";
+
+const authStore = useAuthStore();
 
 const datos = reactive({
   name: "",
@@ -14,13 +16,7 @@ const datos = reactive({
 const errores = ref({});
 
 const handleSubmit = async () => {
-  try {
-    const { data } = await clienteAxios.post("/api/registro", datos);
-    console.log(data.token);
-  } catch (error) {
-    errores.value = Object.values(error.response.data.errors);
-    console.log(errores.value);
-  }
+  authStore.registro(datos, errores)
 };
 </script>
 <template>
