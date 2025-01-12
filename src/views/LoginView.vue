@@ -1,7 +1,6 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
-
 import { useAuthStore } from "@/stores/authStore";
 import SubmitInput from "@/components/SubmitInput.vue";
 import Alerta from "@/components/Alerta.vue";
@@ -14,18 +13,14 @@ const datos = reactive({
 });
 const errores = ref({});
 
-
 const handleSubmit = async () => {
   try {
-    await authStore.login(datos, errores);
-    console.log('Ahora redirecciona');
+     await authStore.login(datos, errores);
     
-    await router.push({ name: "Inicio" });
   } catch (error) {
-    console.error("Error iniciando sesión");
+    console.error(error);
   }
 };
-
 </script>
 <template>
   <h1 class="text-4xl font-black">Iniciar sesión</h1>

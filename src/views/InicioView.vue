@@ -14,7 +14,6 @@ const getProductos = async () => {
     throw new Error("No se pudieron cargar los productos");
   }
 };
-
 const {
   data: productos,
   isLoading,
@@ -23,7 +22,7 @@ const {
 } = useQuery({
   queryKey: ["productos"], // Clave única para esta consulta
   queryFn: getProductos, // Función que realiza la solicitud
-  refetchInterval:3000
+  
 });
 
 const productosCategoria = computed(() =>

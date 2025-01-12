@@ -5,7 +5,9 @@ import { useAuthStore } from "@/stores/authStore";
 import SubmitInput from "@/components/SubmitInput.vue";
 import Alerta from "@/components/Alerta.vue";
 
+
 const authStore = useAuthStore();
+
 
 const datos = reactive({
   name: "",

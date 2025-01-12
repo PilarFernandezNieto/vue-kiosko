@@ -1,8 +1,11 @@
 <script setup>
 import Categoria from "./Categoria.vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
+import { useAuthStore } from "@/stores/authStore";
 
 const kiosko = useKioskoStore();
+const {logout} = useAuthStore();
+
 </script>
 <template>
   <aside class="md:w-72">
@@ -17,6 +20,7 @@ const kiosko = useKioskoStore();
         <button
           class="text-center bg-red-500 w-full p-3 font-bold text-white truncate"
           type="button"
+          @click="logout"
         >
           Cancelar orden
         </button>

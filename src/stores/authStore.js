@@ -1,11 +1,16 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import apiAuth from "@/api/apiAuth";
+import { useToastStore } from "@/stores/toastStore";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("AUTH_TOKEN") || null);
   const user = ref(null);
+  const middleware = ref("");
+  const router = useRouter();
+  const toast = useToastStore();
 
   const setToken = (newToken) => {
     token.value = newToken;
@@ -18,45 +23,51 @@ export const useAuthStore = defineStore("auth", () => {
   const registro = async (datos, errores) => {
     try {
       const { data } = await apiAuth.registro(datos);
-      localStorage.setItem("AUTH_TOKEN", data.token);
       errores.value = [];
+      if (data.type === "success") {
+        toast.mostrarExito(data.mensaje);
+      }
+      await router.push({ name: "login" });
     } catch (error) {
       errores.value = Object.values(error.response.data.errors);
     }
   };
-  const login = async (datos, errores) => {
-    try {
-      const { data } = await apiAuth.login(datos);
-      console.log(data);
-
-      setToken(data.token);
-      errores.value = [];
-    } catch (error) {
-      console.log(errores.value);
-
-      errores.value = Object.values(error.response.data.errors);
-    }
-  };
-  const userQuery = useQuery({
+  const {
+    data: userData,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const { data } = await apiAuth.auth();
-      console.log("user", data);
-
+      const {data} = await apiAuth.auth();
       user.value = data;
       return data;
     },
-    staleTime: 1000 * 60 * 5, // 5 minutos sin hacer nuevas solicitudes
     enabled: !!localStorage.getItem("AUTH_TOKEN"),
   });
+
+  const login = async (datos, errores) => {
+    try {
+      const { data } = await apiAuth.login(datos);
+      setToken(data.token);
+      middleware.value = "guest";
+      errores.value = [];
+      await refetch();
+      console.log("Datos del usuario después de refetch:", userData.value);
+      await router.push({name: 'Inicio'})
+    } catch (error) {
+      console.log(errores.value);
+      errores.value = Object.values(error?.response?.data?.errors);
+    }
+  };
+
 
   const auth = async () => {
     if (!token.value) {
       return next({ name: "login" });
     } else {
       try {
-        console.log("Haciendo solicitud apiAuth.auth()");
-
         const { data } = await apiAuth.auth();
         user.value = data;
         return data;
@@ -66,13 +77,27 @@ export const useAuthStore = defineStore("auth", () => {
       }
     }
   };
+  const logout = async () => {
+    try {
+      await apiAuth.logout();
+      localStorage.removeItem('AUTH_TOKEN');
+      setToken(null);
+      await router.push({name: 'login'})
+    } catch (error) {
+      throw Error(error?.response?.data?.errors)
+    }
+    
+  }
 
   return {
+    middleware,
     token,
     user,
+    error,
     registro,
     login,
-    userQuery,
+    logout,
+    userData,
     auth,
   };
 });
