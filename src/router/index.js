@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import apiAuth from "@/api/apiAuth";
 import { useAuthStore } from "@/stores/authStore";
 import Layout from "@/layouts/Layout.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
@@ -40,20 +39,14 @@ const router = createRouter({
   ],
 });
 router.beforeEach(async (to, from, next) => {
-  
-  const requiresAuth = to.matched.some((url) => url.meta.requiresAuth)
-  if(requiresAuth){
-    try {
-      await apiAuth.auth()
-      next()
-    } catch (error) {
-      next({name: "login"})
-    }
-  } else {
-    next()
-  }
-  
-})
+  const authStore = useAuthStore();
+  const requiresAuth = to.matched.some((url) => url.meta.requiresAuth);
 
+  if (requiresAuth && !authStore.token) {
+    next({ name: "login" });
+  } else {
+    next();
+  }
+});
 
 export default router;
