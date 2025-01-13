@@ -4,7 +4,7 @@ import { useKioskoStore } from "@/stores/kioskoStore";
 import { useAuthStore } from "@/stores/authStore";
 
 const kiosko = useKioskoStore();
-const {logout} = useAuthStore();
+const {logout, userData} = useAuthStore();
 
 </script>
 <template>
@@ -12,6 +12,7 @@ const {logout} = useAuthStore();
     <div class="p-4">
       <img src="/img/logo.svg" alt="imagen logo" class="w-40" />
     </div>
+    <p class="p-4 text-lg">Hola, {{ userData.name }}</p>
     <div class="mt-10">
       <div v-for="categoria in kiosko.categorias" :key="categoria.id">
         <Categoria :categoria="categoria" />

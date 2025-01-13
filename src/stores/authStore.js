@@ -63,20 +63,20 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
 
-  const auth = async () => {
-    if (!token.value) {
-      return next({ name: "login" });
-    } else {
-      try {
-        const { data } = await apiAuth.auth();
-        user.value = data;
-        return data;
-      } catch (error) {
-        console.error("Fallo de autenticación", error);
-        throw new Error("Unable to fetch user data");
-      }
-    }
-  };
+  // const auth = async () => {
+  //   if (!token.value) {
+  //     return next({ name: "login" });
+  //   } else {
+  //     try {
+  //       const { data } = await apiAuth.auth();
+  //       user.value = data;
+  //       return data;
+  //     } catch (error) {
+  //       console.error("Fallo de autenticación", error);
+  //       throw new Error("Unable to fetch user data");
+  //     }
+  //   }
+  // };
   const logout = async () => {
     try {
       await apiAuth.logout();
@@ -98,6 +98,5 @@ export const useAuthStore = defineStore("auth", () => {
     login,
     logout,
     userData,
-    auth,
   };
 });
