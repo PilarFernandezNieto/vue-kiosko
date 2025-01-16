@@ -1,6 +1,7 @@
 import { onMounted, ref } from "vue";
 import { defineStore } from "pinia";
 import { useToastStore } from "./toastStore";
+import { useAuthStore } from "./authStore";
 import clienteAxios from "@/config/axios";
 
 export const useKioskoStore = defineStore("kiosko", () => {
@@ -12,7 +13,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
   const categoriaActual = ref({});
   const modal = ref(false);
   const toast = useToastStore();
-  const totalPedido = ref(0);
+  const authStore = useAuthStore();
 
   onMounted(() => {
     obtenerCategorias();
@@ -29,15 +30,13 @@ export const useKioskoStore = defineStore("kiosko", () => {
     }
   };
   const obtenerProductos = async () => {
-   try {
-    const {data} = await clienteAxios("/api/productos");
-    productos.value = data.data
-    
-   } catch (error) {
-    console.log(error);
-    
-   }
-  }
+    try {
+      const { data } = await clienteAxios("/api/productos");
+      productos.value = data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const seleccionarCategoriaActual = (id) => {
     const categoria = categorias.value.filter(
@@ -84,18 +83,33 @@ export const useKioskoStore = defineStore("kiosko", () => {
   };
   const crearPedido = async (total) => {
     const token = localStorage.getItem("AUTH_TOKEN");
-    
-    
     try {
-      await clienteAxios.post(
+      const { data } = await clienteAxios.post(
         "/api/pedidos",
-        {total: total},
+        {
+          total: total,
+          productos: pedido.value.map((producto) => {
+            return {
+              id: producto.id,
+              cantidad: producto.cantidad,
+            };
+          }),
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      toast.mostrarExito(data.message);
+      setTimeout(() => {
+        pedido.value = [];
+      }, 1000);
+      // Cerrar la sesión del usuario
+      setTimeout(() => {
+        localStorage.removeItem('AUTH_STORE');
+        authStore.logout();
+      }, 3000);
     } catch (error) {
       console.log(error);
     }
@@ -115,6 +129,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     agregarPedido,
     editarCantidad,
     eliminarProductoPedido,
-    crearPedido
+    crearPedido,
   };
 });

@@ -5,6 +5,7 @@ import { formatearMoneda } from "@/helpers";
 import SubmitInput from "./SubmitInput.vue";
 import ResumenProducto from "./ResumenProducto.vue";
 const kiosko = useKioskoStore();
+
 const comprobarPedido = ref("");
 
 const total = computed(() =>
@@ -25,7 +26,6 @@ watch(
 );
 const handleSubmit = () => {
   console.log(total.value);
-  
   kiosko.crearPedido(total.value);
 };
 </script>
