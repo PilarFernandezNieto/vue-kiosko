@@ -1,10 +1,13 @@
 <script setup>
+import { computed } from "vue";
 import Categoria from "./Categoria.vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { useAuthStore } from "@/stores/authStore";
 
 const kiosko = useKioskoStore();
-const {logout, userData} = useAuthStore();
+const authStore = useAuthStore();
+
+const userName = computed(() => authStore.user?.name || "Invitado");
 
 </script>
 <template>
@@ -12,7 +15,7 @@ const {logout, userData} = useAuthStore();
     <div class="p-4">
       <img src="/img/logo.svg" alt="imagen logo" class="w-40" />
     </div>
-    <p class="p-4 text-lg">Hola, {{ userData.name }}</p>
+    <p class="p-4 text-lg">Hola, {{userName }}</p>
     <div class="mt-10">
       <div v-for="categoria in kiosko.categorias" :key="categoria.id">
         <Categoria :categoria="categoria" />
@@ -21,7 +24,7 @@ const {logout, userData} = useAuthStore();
         <button
           class="text-center bg-red-500 w-full p-3 font-bold text-white truncate"
           type="button"
-          @click="logout"
+          @click="authStore.logout"
         >
           Cancelar orden
         </button>

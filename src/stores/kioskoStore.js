@@ -5,15 +5,18 @@ import clienteAxios from "@/config/axios";
 
 export const useKioskoStore = defineStore("kiosko", () => {
   const categorias = ref([]);
+  const productos = ref([]);
   const producto = ref({});
   const cantidad = ref(1);
   const pedido = ref([]);
   const categoriaActual = ref({});
   const modal = ref(false);
   const toast = useToastStore();
+  const totalPedido = ref(0);
 
   onMounted(() => {
     obtenerCategorias();
+    obtenerProductos();
   });
 
   const obtenerCategorias = async () => {
@@ -25,6 +28,16 @@ export const useKioskoStore = defineStore("kiosko", () => {
       console.log(error);
     }
   };
+  const obtenerProductos = async () => {
+   try {
+    const {data} = await clienteAxios("/api/productos");
+    productos.value = data.data
+    
+   } catch (error) {
+    console.log(error);
+    
+   }
+  }
 
   const seleccionarCategoriaActual = (id) => {
     const categoria = categorias.value.filter(
@@ -69,9 +82,28 @@ export const useKioskoStore = defineStore("kiosko", () => {
     pedido.value = pedidoActualizado;
     toast.mostrarExito("Producto eliminado del pedido");
   };
+  const crearPedido = async (total) => {
+    const token = localStorage.getItem("AUTH_TOKEN");
+    
+    
+    try {
+      await clienteAxios.post(
+        "/api/pedidos",
+        {total: total},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return {
     categorias,
+    productos,
     producto,
     cantidad,
     pedido,
@@ -83,5 +115,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     agregarPedido,
     editarCantidad,
     eliminarProductoPedido,
+    crearPedido
   };
 });

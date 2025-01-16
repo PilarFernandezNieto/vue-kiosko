@@ -6,21 +6,28 @@ import SubmitInput from "./SubmitInput.vue";
 import ResumenProducto from "./ResumenProducto.vue";
 const kiosko = useKioskoStore();
 const comprobarPedido = ref("");
+
 const total = computed(() =>
   kiosko.pedido.reduce(
     (total, producto) => producto.precio * producto.cantidad + total,
     0
   )
 );
-watch(() => kiosko.pedido.length, () => {
-  if (kiosko.pedido.length === 0) {
-    comprobarPedido.value = true;
-  } else {
-    comprobarPedido.value = false;
+watch(
+  () => kiosko.pedido.length,
+  () => {
+    if (kiosko.pedido.length === 0) {
+      comprobarPedido.value = true;
+    } else {
+      comprobarPedido.value = false;
+    }
   }
-});
-
-
+);
+const handleSubmit = () => {
+  console.log(total.value);
+  
+  kiosko.crearPedido(total.value);
+};
 </script>
 <template>
   <aside class="w-72 h-screen overflow-y_scroll p-5">
@@ -35,9 +42,8 @@ watch(() => kiosko.pedido.length, () => {
       </div>
     </div>
     <p class="mt-10 text-xl">Total: {{ formatearMoneda(total) }}</p>
-    <form class="w-full">
+    <form @submit.prevent="handleSubmit" class="w-full">
       <div class="mt-5">
-        <p>{{ comprobarPedido }}</p>
         <SubmitInput :disabled="comprobarPedido" value="Confirmar pedido" />
       </div>
     </form>
