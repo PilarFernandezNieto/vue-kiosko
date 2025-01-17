@@ -1,21 +1,34 @@
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
+import { RouterLink } from "vue-router";
 import Categoria from "./Categoria.vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { useAuthStore } from "@/stores/authStore";
 
 const kiosko = useKioskoStore();
 const authStore = useAuthStore();
+console.log(authStore.user);
+onMounted(() => {
+  authStore.auth();
+});
 
-const userName = computed(() => authStore.user?.name || "Invitado");
-
+const userName = computed(() => authStore.user?.name || "");
+const isAdmin = computed(() => authStore.user?.admin);
 </script>
 <template>
   <aside class="md:w-72">
     <div class="p-4">
       <img src="/img/logo.svg" alt="imagen logo" class="w-40" />
     </div>
-    <p class="p-4 text-lg">Hola, {{userName }}</p>
+    <p class="p-4 text-lg">Hola, {{ userName }}</p>
+    
+      <RouterLink
+       v-if="isAdmin" class=" ml-4 p-2 text-lg font-medium border border-green-600 bg-green-300 text-green-600 rounded-md"
+        :to="{ name: 'pedidos' }"
+        >Panel Administración</RouterLink
+      >
+    
+
     <div class="mt-10">
       <div v-for="categoria in kiosko.categorias" :key="categoria.id">
         <Categoria :categoria="categoria" />

@@ -1,15 +1,16 @@
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import apiAuth from "@/api/apiAuth";
 import { useToastStore } from "@/stores/toastStore";
-import clienteAxios from "@/config/axios";
+
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("AUTH_TOKEN") || null);
   const user = ref(null);
   const router = useRouter();
   const toast = useToastStore();
+  const cachedUser = ref(localStorage.getItem("user_data") || null); // Caché local
 
   const setToken = (newToken) => {
     token.value = newToken;
@@ -17,6 +18,14 @@ export const useAuthStore = defineStore("auth", () => {
       localStorage.setItem("AUTH_TOKEN", newToken);
     } else {
       localStorage.removeItem("AUTH_TOKEN");
+    }
+  };
+  const setUser = (newUser) => {
+    user.value = newUser;
+    if (newUser) {
+      localStorage.setItem("auth_data", newUser);
+    } else {
+      localStorage.removeItem("auth_data");
     }
   };
   const registro = async (datos, errores) => {
@@ -36,8 +45,13 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const { data } = await apiAuth.login(datos);
       setToken(data.token);
+      
       errores.value = [];
       user.value = await auth();
+      localStorage.setItem("user_data", JSON.stringify(data.user));
+      cachedUser.value = JSON.stringify(data.user);
+      console.log(user.value);
+      
       await router.push({ name: "inicio" });
     } catch (error) {
       console.log(errores.value);
@@ -45,11 +59,18 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
   const auth = async () => {
+    if (cachedUser.value) {
+      user.value = JSON.parse(cachedUser.value); // Usar los datos almacenados
+      return user.value;
+    }
     if (!token.value) {
       return next({ name: "login" });
     } else {
       try {
         const { data } = await apiAuth.auth();
+        user.value = data
+        localStorage.setItem("user_data", JSON.stringify(data));
+        cachedUser.value = JSON.stringify(data);
         return data;
       } catch (error) {
         console.error("Fallo de autenticación", error);
@@ -61,7 +82,9 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       await apiAuth.logout();
       localStorage.removeItem("AUTH_TOKEN");
+      localStorage.removeItem("user_data");
       setToken(null);
+      user.value = null;
       await router.push({ name: "login" });
     } catch (error) {
       throw Error(error?.response?.data?.errors);
@@ -74,5 +97,6 @@ export const useAuthStore = defineStore("auth", () => {
     registro,
     login,
     logout,
+    auth
   };
 });

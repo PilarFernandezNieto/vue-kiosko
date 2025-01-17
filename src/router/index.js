@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import apiAuth from "@/api/apiAuth";
 import Layout from "@/layouts/Layout.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import AdminLayout from "@/layouts/AdminLayout.vue";
@@ -40,6 +41,7 @@ const router = createRouter({
     {
       path: "/admin",
       name: "admin",
+      meta: { requiresAdmin: true },
       component: AdminLayout,
       children: [
         {
@@ -50,19 +52,36 @@ const router = createRouter({
         {
           path: "productos",
           name: "productos",
-          component: () => import("@/views/Productos.vue")
-        }
-      ]
+          component: () => import("@/views/Productos.vue"),
+        },
+      ],
     },
   ],
 });
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const requiresAuth = to.matched.some((url) => url.meta.requiresAuth);
+  const requiresAdmin = to.matched.some((url) => url.meta.requiresAdmin);
 
-  if (requiresAuth && !authStore.token) {
-    next({ name: "login" });
-  } else {
+  try {
+    if (requiresAuth && !authStore.token) {
+      return next({ name: "login" });
+    }
+
+    if (requiresAdmin) {
+      const { data } = await apiAuth.auth(); // Verifica al usuario autenticado
+      console.log(data);
+
+      if (!data.admin) {
+        return next({ name: "inicio" });
+      }
+    }
+    next(); // Permite la navegación si pasa las verificaciones
+  } catch (error) {
+    console.error("Error during navigation:", error);
+    if (requiresAuth || requiresAdmin) {
+      return next({ name: "login" });
+    }
     next();
   }
 });
