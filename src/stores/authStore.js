@@ -38,7 +38,7 @@ export const useAuthStore = defineStore("auth", () => {
       setToken(data.token);
       errores.value = [];
       user.value = await auth();
-      await router.push({ name: "Inicio" });
+      await router.push({ name: "inicio" });
     } catch (error) {
       console.log(errores.value);
       errores.value = Object.values(error?.response?.data?.errors);
