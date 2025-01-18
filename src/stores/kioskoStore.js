@@ -123,15 +123,25 @@ export const useKioskoStore = defineStore("kiosko", () => {
   };
 
   const completarPedido = async(id) => {
-    
     try {
-      const {data } = await clienteAxios.put(`/api/pedidos/${id}`, null, {
+      await clienteAxios.put(`/api/pedidos/${id}`, null, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
     } catch (error) {
       console.log("Error desde completar pedido", error);
+    }
+  }
+  const productoAgotado = async(id) => {
+    try {
+      await clienteAxios.put(`/api/productos/${id}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    } catch (error) {
+      console.log("Error desde producto agotado", error);
     }
   }
 
@@ -149,6 +159,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
     editarCantidad,
     eliminarProductoPedido,
     crearPedido,
-    completarPedido
+    completarPedido,
+    productoAgotado
   };
 });

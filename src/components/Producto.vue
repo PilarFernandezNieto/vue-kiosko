@@ -1,10 +1,11 @@
 <script setup>
 import { formatearMoneda } from "@/helpers";
 import { useKioskoStore } from "@/stores/kioskoStore";
+import { computed } from "vue";
 
 const kiosko = useKioskoStore();
 
-defineProps({
+const props = defineProps({
   producto: {
     type: Object,
     required: true,
@@ -18,6 +19,10 @@ defineProps({
     default: false,
   },
 });
+
+const agotado = computed(() => props.producto.disponible)
+console.log(agotado.value);
+
 </script>
 
 <template>
@@ -45,7 +50,7 @@ defineProps({
         v-if="botonDisponible"
         type="button"
         class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md"
-        @click=""
+        @click="kiosko.productoAgotado(producto.id)"
       >
         Producto Agotado
       </button>

@@ -22,8 +22,6 @@ const {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("desde usequery", data.data);
-
     return data.data;
   },
 });
