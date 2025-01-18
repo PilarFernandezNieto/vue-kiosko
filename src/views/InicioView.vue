@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import Producto from "@/components/Producto.vue";
 
