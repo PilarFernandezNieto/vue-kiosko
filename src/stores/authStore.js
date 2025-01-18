@@ -20,14 +20,6 @@ export const useAuthStore = defineStore("auth", () => {
       localStorage.removeItem("AUTH_TOKEN");
     }
   };
-  const setUser = (newUser) => {
-    user.value = newUser;
-    if (newUser) {
-      localStorage.setItem("auth_data", newUser);
-    } else {
-      localStorage.removeItem("auth_data");
-    }
-  };
   const registro = async (datos, errores) => {
     try {
       const { data } = await apiAuth.registro(datos);
