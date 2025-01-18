@@ -3,8 +3,11 @@ import { useQuery } from "@tanstack/vue-query";
 import clienteAxios from "@/config/axios";
 import { VueSpinner } from "vue3-spinners";
 import { formatearMoneda } from "@/helpers";
+import { useKioskoStore } from "@/stores/kioskoStore";
 
 const token = localStorage.getItem("AUTH_TOKEN");
+const kioskoStore = useKioskoStore();
+
 const {
   data: pedidos,
   isLoading,
@@ -19,13 +22,10 @@ const {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(data.data);
-
     return data.data;
   },
-  refetchInterval: 5000
+  refetchInterval: 5000,
 });
-console.log(pedidos.value);
 </script>
 <template>
   <div>
@@ -38,7 +38,7 @@ console.log(pedidos.value);
       <div
         v-for="pedido in pedidos"
         :key="pedido.id"
-        class="p-5 bg-white shadow space-y-2 border-b mb-4"
+        class="p-5 bg-white shadow space-y-2 border-b mb-4 w-4/5 mx-auto"
       >
         <p class="text-xl font-bold text-slate-600">Contenido del pedido</p>
         <div
@@ -53,10 +53,11 @@ console.log(pedidos.value);
             <span class="font-bold">{{ producto.pivot.cantidad }}</span>
           </p>
         </div>
+
         <p class="text-lg font-bold text-slate-600">
           Cliente: <span class="font-normal">{{ pedido.user.name }}</span>
         </p>
-        <p class="text-lg font-bold text-amber-500">
+        <p class="text-lg font-bold text-amber-500 mb-3">
           Total a pagar:
           <span class="font-normal text-slate-600">{{
             formatearMoneda(pedido.total)
@@ -65,6 +66,7 @@ console.log(pedidos.value);
         <button
           type="button"
           class="bg-indigo-600 hover:bg-indigo-800 px-5 py-2 rounded uppercase font-bold text-white text-center w-40 cursor-pointer"
+          @click="kioskoStore.completarPedido(pedido.id)"
         >
           Completar
         </button>

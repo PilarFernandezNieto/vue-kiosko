@@ -14,15 +14,19 @@ export const useKioskoStore = defineStore("kiosko", () => {
   const modal = ref(false);
   const toast = useToastStore();
   const authStore = useAuthStore();
+  const token = localStorage.getItem("AUTH_TOKEN");
 
   onMounted(() => {
     obtenerCategorias();
-    obtenerProductos();
   });
 
   const obtenerCategorias = async () => {
     try {
-      const { data } = await clienteAxios("/api/categorias");
+      const { data } = await clienteAxios("/api/categorias", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       categorias.value = data.data;
       categoriaActual.value = data.data[0];
     } catch (error) {
@@ -31,7 +35,11 @@ export const useKioskoStore = defineStore("kiosko", () => {
   };
   const obtenerProductos = async () => {
     try {
-      const { data } = await clienteAxios("/api/productos");
+      const { data } = await clienteAxios("/api/productos", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       productos.value = data.data;
     } catch (error) {
       console.log(error);
@@ -82,7 +90,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     toast.mostrarExito("Producto eliminado del pedido");
   };
   const crearPedido = async (total) => {
-    const token = localStorage.getItem("AUTH_TOKEN");
     try {
       const { data } = await clienteAxios.post(
         "/api/pedidos",
@@ -107,7 +114,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
       }, 1000);
       // Cerrar la sesión del usuario
       setTimeout(() => {
-        localStorage.removeItem('AUTH_STORE');
+        localStorage.removeItem("AUTH_STORE");
         authStore.logout();
       }, 3000);
     } catch (error) {
@@ -115,9 +122,21 @@ export const useKioskoStore = defineStore("kiosko", () => {
     }
   };
 
+  const completarPedido = async(id) => {
+    
+    try {
+      const {data } = await clienteAxios.put(`/api/pedidos/${id}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    } catch (error) {
+      console.log("Error desde completar pedido", error);
+    }
+  }
+
   return {
     categorias,
-    productos,
     producto,
     cantidad,
     pedido,
@@ -130,5 +149,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     editarCantidad,
     eliminarProductoPedido,
     crearPedido,
+    completarPedido
   };
 });
