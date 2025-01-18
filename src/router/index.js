@@ -70,8 +70,6 @@ router.beforeEach(async (to, from, next) => {
 
     if (requiresAdmin) {
       const { data } = await apiAuth.auth(); // Verifica al usuario autenticado
-      console.log(data);
-
       if (!data.admin) {
         return next({ name: "inicio" });
       }

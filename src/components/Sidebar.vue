@@ -7,7 +7,6 @@ import { useAuthStore } from "@/stores/authStore";
 
 const kiosko = useKioskoStore();
 const authStore = useAuthStore();
-console.log(authStore.user);
 onMounted(() => {
   authStore.auth();
 });
