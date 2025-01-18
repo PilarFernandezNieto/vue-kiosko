@@ -10,7 +10,7 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const router = useRouter();
   const toast = useToastStore();
-  
+
   const setToken = (newToken) => {
     token.value = newToken;
     if (newToken) {
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore("auth", () => {
       localStorage.removeItem("AUTH_TOKEN");
     }
   };
-    // Usar la query de Vue Query para obtener el usuario
+  // Usar la query de Vue Query para obtener el usuario
   const {
     data: userData,
     isLoading,
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
       return data;
     },
     enabled: !!localStorage.getItem("AUTH_TOKEN"),
-  });
+   });
 
   const registro = async (datos, errores) => {
     try {
@@ -54,8 +54,8 @@ export const useAuthStore = defineStore("auth", () => {
       const { data } = await apiAuth.login(datos);
       setToken(data.token);
       errores.value = [];
-      console.log("desde login", user.value);  
-      refetch();
+      console.log("desde login", user.value);
+      await refetch();
       await router.push({ name: "inicio" });
     } catch (error) {
       console.log(errores.value);
@@ -63,16 +63,15 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
   const auth = async () => {
-
+    console.log("antes de la petición", user.value);
+    
     if (!token.value) {
       return next({ name: "login" });
     } else {
       try {
         const { data } = await apiAuth.auth();
-        user.value = data
+        user.value = data;
         console.log("desde auth", user.value);
-        console.log("desde sidebar", user.value);
-        
         return data;
       } catch (error) {
         console.error("Fallo de autenticación", error);
@@ -84,6 +83,7 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       await apiAuth.logout();
       setToken(null);
+      user.value = null;
       await router.push({ name: "login" });
     } catch (error) {
       throw Error(error?.response?.data?.errors);

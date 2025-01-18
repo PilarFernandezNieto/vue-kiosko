@@ -11,11 +11,10 @@ const kiosko = useKioskoStore();
 const authStore = useAuthStore();
 
 onMounted(() => {
-  authStore.auth();
+  
+  console.log("Estado inicial del usuario:", authStore.user);
 });
 console.log("desde sidebar", authStore.user);
-console.log("desde sidebar", authStore.userData);
-
 const userName = computed(() => authStore.user?.name || "");
 const isAdmin = computed(() => authStore.user?.admin);
 const loading = computed(() => authStore.isLoading);
