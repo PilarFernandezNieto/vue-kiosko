@@ -1,16 +1,15 @@
 import { defineStore } from "pinia";
+import { useQuery } from "@tanstack/vue-query";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import apiAuth from "@/api/apiAuth";
 import { useToastStore } from "@/stores/toastStore";
-
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("AUTH_TOKEN") || null);
   const user = ref(null);
   const router = useRouter();
   const toast = useToastStore();
-  const cachedUser = ref(localStorage.getItem("user_data") || null); // Caché local
 
   const setToken = (newToken) => {
     token.value = newToken;
@@ -20,6 +19,23 @@ export const useAuthStore = defineStore("auth", () => {
       localStorage.removeItem("AUTH_TOKEN");
     }
   };
+  // Usar la query de Vue Query para obtener el usuario
+  const {
+    data: userData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const { data } = await apiAuth.auth();
+      user.value = data;
+      return data;
+    },
+    enabled: !!localStorage.getItem("AUTH_TOKEN"),
+   });
+
   const registro = async (datos, errores) => {
     try {
       const { data } = await apiAuth.registro(datos);
@@ -37,13 +53,9 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const { data } = await apiAuth.login(datos);
       setToken(data.token);
-      
       errores.value = [];
-      user.value = await auth();
-      localStorage.setItem("user_data", JSON.stringify(data.user));
-      cachedUser.value = JSON.stringify(data.user);
-      console.log(user.value);
-      
+      console.log("desde login", user.value);
+      await refetch();
       await router.push({ name: "inicio" });
     } catch (error) {
       console.log(errores.value);
@@ -51,18 +63,15 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
   const auth = async () => {
-    if (cachedUser.value) {
-      user.value = JSON.parse(cachedUser.value); // Usar los datos almacenados
-      return user.value;
-    }
+    console.log("antes de la petición", user.value);
+    
     if (!token.value) {
       return next({ name: "login" });
     } else {
       try {
         const { data } = await apiAuth.auth();
-        user.value = data
-        localStorage.setItem("user_data", JSON.stringify(data));
-        cachedUser.value = JSON.stringify(data);
+        user.value = data;
+        console.log("desde auth", user.value);
         return data;
       } catch (error) {
         console.error("Fallo de autenticación", error);
@@ -73,8 +82,6 @@ export const useAuthStore = defineStore("auth", () => {
   const logout = async () => {
     try {
       await apiAuth.logout();
-      localStorage.removeItem("AUTH_TOKEN");
-      localStorage.removeItem("user_data");
       setToken(null);
       user.value = null;
       await router.push({ name: "login" });
@@ -85,10 +92,12 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     token,
-    user,
+    user: userData,
+    isLoading,
+    isError,
     registro,
     login,
     logout,
-    auth
+    auth,
   };
 });
