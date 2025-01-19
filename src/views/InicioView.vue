@@ -24,6 +24,7 @@ const {
     });
     return data.data;
   },
+  refetchInterval: 5000
 });
 
 const productosCategoria = computed(() =>

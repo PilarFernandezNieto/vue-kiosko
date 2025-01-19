@@ -18,27 +18,23 @@ const {
   queryKey: ["productos", currentPage],
   queryFn: async ({ queryKey }) => {
     const page = queryKey[1];
-    console.log("pagina", page);
-
-    const { data, request } = await clienteAxios.get(
-      `/api/productos?page=${page}`,
+    const { data } = await clienteAxios.get(
+      `/api/admin/productos?page=${page}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-    console.log(request.responseURL);
-
+    console.log(data)
     return data;
   },
-  //refetchInterval: 5000,
+  refetchInterval: 5000,
   keepPreviousData: true,
 });
 
 const productosAll = computed(() => productos?.value?.data || []);
 const totalPages = computed(() => productos?.value?.meta.last_page || 1);
-console.log(totalPages.value);
 </script>
 <template>
   <div>
