@@ -22,6 +22,8 @@ const props = defineProps({
 
 const agotado = computed(() => !props.producto.disponible)
 
+
+
 </script>
 
 <template>
@@ -48,10 +50,12 @@ const agotado = computed(() => !props.producto.disponible)
       <button
         v-if="botonDisponible"
         type="button"
-        class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md" :class="agotado ? 'bg-indigo-400' : ''"
+        class=" text-white w-full mt-5 p-3 uppercase font-bold rounded-md"  :class="[
+          agotado ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-800 text-white'
+        ]"
         @click="kiosko.productoAgotado(producto.id)"
       >
-        Producto Agotado
+      {{ agotado ? 'Producto Agotado' : 'Producto Disponible' }} 
       </button>
     </div>
   </div>
