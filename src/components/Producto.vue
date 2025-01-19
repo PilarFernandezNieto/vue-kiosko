@@ -20,8 +20,7 @@ const props = defineProps({
   },
 });
 
-const agotado = computed(() => props.producto.disponible)
-console.log(agotado.value);
+console.log("producto", props.producto)
 
 </script>
 
@@ -41,7 +40,7 @@ console.log(agotado.value);
       <button
         v-if="botonAgregar"
         type="button"
-        class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md"
+        class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md" 
         @click="kiosko.toggleModal(), kiosko.seleccionarProducto(producto)"
       >
         Añadir
@@ -49,7 +48,7 @@ console.log(agotado.value);
       <button
         v-if="botonDisponible"
         type="button"
-        class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md"
+        class="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold rounded-md" :class="producto.disponible === 0 ? 'bg-indigo-200' : ''"
         @click="kiosko.productoAgotado(producto.id)"
       >
         Producto Agotado

@@ -18,9 +18,7 @@ const {
   queryKey: ["productos", currentPage],
   queryFn: async ({ queryKey }) => {
     const page = queryKey[1];
-    console.log("pagina", page);
-
-    const { data, request } = await clienteAxios.get(
+    const { data } = await clienteAxios.get(
       `/api/productos?page=${page}`,
       {
         headers: {
@@ -28,8 +26,6 @@ const {
         },
       }
     );
-    console.log(request.responseURL);
-
     return data;
   },
   //refetchInterval: 5000,
@@ -38,7 +34,6 @@ const {
 
 const productosAll = computed(() => productos?.value?.data || []);
 const totalPages = computed(() => productos?.value?.meta.last_page || 1);
-console.log(totalPages.value);
 </script>
 <template>
   <div>

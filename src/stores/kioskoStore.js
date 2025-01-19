@@ -135,11 +135,12 @@ export const useKioskoStore = defineStore("kiosko", () => {
   }
   const productoAgotado = async(id) => {
     try {
-      await clienteAxios.put(`/api/productos/${id}`, null, {
+      const {data} = await clienteAxios.put(`/api/productos/${id}`, null, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
+      return data.producto;
     } catch (error) {
       console.log("Error desde producto agotado", error);
     }
