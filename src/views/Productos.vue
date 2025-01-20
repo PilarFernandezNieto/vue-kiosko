@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import clienteAxios from "@/config/axios";
 import { VueSpinner } from "vue3-spinners";
@@ -49,6 +50,7 @@ const totalPages = computed(() => {
   <div>
     <h1 class="text-4xl font-black">Productos</h1>
     <p class="text-2xl my-10">Administra productos desde aquí</p>
+    <RouterLink :to="{name: 'nuevo-producto'}" class="bg-indigo-600 hover:bg-indigo-800 rounded text-white py-2 px-4">Nuevo Producto</RouterLink>
     <div v-if="isLoading" class="flex justify-center">
       <VueSpinner size="40" color="#16a34a" />
     </div>
@@ -61,7 +63,7 @@ const totalPages = computed(() => {
       v-model="currentPage"
       :records="totalPages"
       :per-page="9"
-      @paginate="onPaginate"
+      @paginate="refetch"
     />
   </div>
 </template>
