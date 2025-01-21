@@ -20,16 +20,15 @@ const props = defineProps({
   },
 });
 
-const agotado = computed(() => !props.producto.disponible)
-
-
-
+const agotado = computed(() => !props.producto.disponible);
+const imagenServer = computed(() => props.producto.imagen.startsWith("http"));
+console.log(imagenServer.value);
 </script>
 
 <template>
   <div class="border p-3 shadow bg-white">
     <img
-      :src="`/img/${producto.imagen}.jpg`"
+      :src="[imagenServer ? producto.imagen : `/img/${producto.imagen}.jpg`]"
       :alt="`imagen_${producto.nombre}`"
       class="w-full"
     />
@@ -50,12 +49,15 @@ const agotado = computed(() => !props.producto.disponible)
       <button
         v-if="botonDisponible"
         type="button"
-        class=" text-white w-full mt-5 p-3 uppercase font-bold rounded-md"  :class="[
-          agotado ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-800 text-white'
+        class="text-white w-full mt-5 p-3 uppercase font-bold rounded-md"
+        :class="[
+          agotado
+            ? 'bg-indigo-400 cursor-not-allowed'
+            : 'bg-indigo-600 hover:bg-indigo-800 text-white',
         ]"
         @click="kiosko.productoAgotado(producto.id)"
       >
-      {{ agotado ? 'Producto Agotado' : 'Producto Disponible' }} 
+        {{ agotado ? "Producto Agotado" : "Producto Disponible" }}
       </button>
     </div>
   </div>
