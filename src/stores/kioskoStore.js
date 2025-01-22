@@ -133,7 +133,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
       console.log("Error desde completar pedido", error);
     }
   }
-  const productoAgotado = async(id) => {
+  const editarProducto = async(id) => {
     try {
       await clienteAxios.put(`/api/productos/${id}`, null, {
         headers: {
@@ -160,6 +160,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     eliminarProductoPedido,
     crearPedido,
     completarPedido,
-    productoAgotado
+    editarProducto
   };
 });

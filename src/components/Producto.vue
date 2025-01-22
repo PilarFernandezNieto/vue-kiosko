@@ -1,9 +1,12 @@
 <script setup>
 import { formatearMoneda } from "@/helpers";
 import { useKioskoStore } from "@/stores/kioskoStore";
+import { useAuthStore } from "@/stores/authStore";
 import { computed } from "vue";
+import { RouterLink } from "vue-router";
 
 const kiosko = useKioskoStore();
+const authStore = useAuthStore();
 
 const props = defineProps({
   producto: {
@@ -22,7 +25,8 @@ const props = defineProps({
 
 const agotado = computed(() => !props.producto.disponible);
 const imagenServer = computed(() => props.producto.imagen.startsWith("http"));
-console.log(imagenServer.value);
+const isAdmin = computed(() => authStore.user.admin)
+
 </script>
 
 <template>
@@ -55,10 +59,14 @@ console.log(imagenServer.value);
             ? 'bg-indigo-400 cursor-not-allowed'
             : 'bg-indigo-600 hover:bg-indigo-800 text-white',
         ]"
-        @click="kiosko.productoAgotado(producto.id)"
+        
       >
         {{ agotado ? "Producto Agotado" : "Producto Disponible" }}
       </button>
+      <div class="flex justify-between gap-4 mt-5">
+        <RouterLink :to="{name: 'editar-producto', params: {id: producto.id}}" class="bg-green-500 hover:bg-green-700  p-3 uppercase font-bold rounded-md w-full text-white text-center">Editar</RouterLink>
+        <button class="bg-red-500 hover:bg-red-700  p-3 uppercase font-bold rounded-md w-full text-white">Borrar</button>
+      </div>
     </div>
   </div>
 </template>
