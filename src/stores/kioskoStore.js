@@ -145,6 +145,22 @@ export const useKioskoStore = defineStore("kiosko", () => {
     }
   }
 
+  const eliminarProducto = async (id) => {
+    try {
+      const {data} = await clienteAxios.delete(`/api/admin/productos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      toast.mostrarExito(data.message);
+      
+      
+    } catch (error) {
+      console.log("Error desde eliminar producto", error);
+    }
+    
+  }
+
   return {
     categorias,
     producto,
@@ -160,6 +176,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
     eliminarProductoPedido,
     crearPedido,
     completarPedido,
-    editarProducto
+    editarProducto,
+    eliminarProducto
   };
 });

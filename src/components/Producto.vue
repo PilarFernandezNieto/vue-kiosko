@@ -3,10 +3,11 @@ import { formatearMoneda } from "@/helpers";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { useAuthStore } from "@/stores/authStore";
 import { computed } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 
 const kiosko = useKioskoStore();
 const authStore = useAuthStore();
+const route = useRoute();
 
 const props = defineProps({
   producto: {
@@ -25,7 +26,8 @@ const props = defineProps({
 
 const agotado = computed(() => !props.producto.disponible);
 const imagenServer = computed(() => props.producto.imagen.startsWith("http"));
-const isAdmin = computed(() => authStore.user.admin)
+const isAdmin = computed(() => route.fullPath.startsWith('/admin') ? true : false);
+
 
 </script>
 
@@ -63,9 +65,9 @@ const isAdmin = computed(() => authStore.user.admin)
       >
         {{ agotado ? "Producto Agotado" : "Producto Disponible" }}
       </button>
-      <div class="flex justify-between gap-4 mt-5">
+      <div v-if="isAdmin" class="flex justify-between gap-4 mt-5">
         <RouterLink :to="{name: 'editar-producto', params: {id: producto.id}}" class="bg-green-500 hover:bg-green-700  p-3 uppercase font-bold rounded-md w-full text-white text-center">Editar</RouterLink>
-        <button class="bg-red-500 hover:bg-red-700  p-3 uppercase font-bold rounded-md w-full text-white">Borrar</button>
+        <button class="bg-red-500 hover:bg-red-700  p-3 uppercase font-bold rounded-md w-full text-white" @click="kiosko.eliminarProducto(producto.id)">Borrar</button>
       </div>
     </div>
   </div>
