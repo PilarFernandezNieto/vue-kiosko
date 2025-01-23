@@ -64,6 +64,16 @@ const router = createRouter({
           name: "editar-producto",
           component: () => import("@/views/EditarProductoView.vue"),
         },
+        {
+          path: "categorias",
+          name: "categorias",
+          component: () => import("@/views/Categorias.vue"),
+        },
+        {
+          path: "nueva",
+          name: "nueva-categoria",
+          component: () => import("@/views/NuevaCategoriaView.vue"),
+        },
 
       ],
     },

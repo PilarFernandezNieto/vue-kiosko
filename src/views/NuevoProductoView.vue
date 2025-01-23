@@ -1,10 +1,14 @@
 <script setup>
 import clienteAxios from "@/config/axios";
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import SubmitInput from "@/components/SubmitInput.vue";
+import { useToastStore } from "@/stores/toastStore";
 
 const kioskoStore = useKioskoStore();
+const router = useRouter();
+const toast = useToastStore();
 const datos = reactive({
   nombre: "",
   imagen: null,
@@ -37,7 +41,8 @@ const submitForm = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(data);
+    toast.mostrarExito(data.message);
+    router.push({ name: "productos" });
   } catch (error) {
     console.error(error);
   }
@@ -89,12 +94,14 @@ const submitForm = async () => {
             name="disponible"
             class="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-md"
             v-model="datos.disponible"
-            
           />
         </div>
         <div class="col-span-2 flex items-center justify-around gap-4">
           <label for="categoria" class="text-slate-800">Categoría</label>
-          <select name="categoria" id="categoria" v-model="datos.categoria_id"
+          <select
+            name="categoria"
+            id="categoria"
+            v-model="datos.categoria_id"
             class="p-3 w-full bg-gray-50 border border-gray-200 rounded-md"
           >
             <option value="0">--Selecciona categoría--</option>

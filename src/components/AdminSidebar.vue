@@ -19,6 +19,9 @@ const route = useRoute();
       <RouterLink :to="{ name: 'productos' }" class="font-bold text-2xl p-3" :class="route.name === 'productos' ?  'bg-amber-400 rounded' : ''"
         >Productos</RouterLink
       >
+      <RouterLink :to="{ name: 'categorias' }" class="font-bold text-2xl p-3" :class="route.name === 'categorias' ?  'bg-amber-400 rounded' : ''"
+        >Categorías</RouterLink
+      >
     </nav>
     <div class="my-5 px-5">
       <button

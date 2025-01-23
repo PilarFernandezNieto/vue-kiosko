@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import { useToastStore } from "./toastStore";
 import { useAuthStore } from "./authStore";
@@ -18,34 +18,34 @@ export const useKioskoStore = defineStore("kiosko", () => {
 
   onMounted(() => {
     obtenerCategorias();
+    console.log('Token', token);
+    
   });
 
   const obtenerCategorias = async () => {
     try {
       const { data } = await clienteAxios("/api/categorias", {
+
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       categorias.value = data.data;
+      console.log("Categorias", categorias.value);
+      
       categoriaActual.value = data.data[0];
     } catch (error) {
       console.log(error);
     }
   };
-  const obtenerProductos = async () => {
-    try {
-      const { data } = await clienteAxios("/api/productos", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      productos.value = data.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  watch(
+    () => categorias.value, // Observar la propiedad `categorias`
+    (newValue, oldValue) => {
+     obtenerCategorias();
+    },
+    { deep: true } // Si los datos son objetos o arrays, usa deep para observar cambios internos.
+  );
   const seleccionarCategoriaActual = (id) => {
     const categoria = categorias.value.filter(
       (categoria) => categoria.id === id
