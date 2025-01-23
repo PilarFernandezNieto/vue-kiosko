@@ -18,8 +18,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
 
   onMounted(() => {
     obtenerCategorias();
-    console.log('Token', token);
-    
   });
 
   const obtenerCategorias = async () => {
@@ -42,7 +40,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
   watch(
     () => categorias.value, // Observar la propiedad `categorias`
     (newValue, oldValue) => {
-     obtenerCategorias();
+
     },
     { deep: true } // Si los datos son objetos o arrays, usa deep para observar cambios internos.
   );
