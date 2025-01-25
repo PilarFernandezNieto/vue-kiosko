@@ -4,13 +4,7 @@ import { watch, computed } from "vue";
 import { useKioskoStore } from "@/stores/kioskoStore";
 import { categorias } from "@/data/categorias";
 const kioskoStore = useKioskoStore();
-watch(
-  () => kioskoStore.categorias, // Observar la propiedad `categorias`
-  (newValue, oldValue) => {
-    console.log("Categorías actualizadas:", newValue);
-  },
-  { deep: true } // Si los datos son objetos o arrays, usa deep para observar cambios internos.
-);
+
 </script>
 <template>
   <div>

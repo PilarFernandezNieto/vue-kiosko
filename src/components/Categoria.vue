@@ -20,10 +20,15 @@ const resaltarCategoriaActual = (categoria) =>
     @click="kiosko.seleccionarCategoriaActual(categoria.id)"
   >
     <img
-      :src="`/img/icono_${categoria.icono}.svg`"
-      :alt="'icono_' + categoria.nombre"
+      :src="
+        categoria.icono.startsWith('http')
+          ? categoria.icono
+          : `/img/icono_${categoria.icono}.svg`
+      "
+      :alt="`icono${categoria.nombre}`"
       class="w-12"
     />
+
     <p class="text-lg font-bold cursor-pointer truncate">
       {{ categoria.nombre }}
     </p>

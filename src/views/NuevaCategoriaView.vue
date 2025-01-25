@@ -17,7 +17,6 @@ const datos = reactive({
 const token = localStorage.getItem("AUTH_TOKEN");
 console.log("token", token);
 
-
 const handleImageChange = (e) => {
   datos.icono = e.target.files[0];
   console.log(icono.value);
@@ -27,10 +26,6 @@ const submitForm = async () => {
   const formData = new FormData();
   formData.append("nombre", datos.nombre);
   formData.append("icono", datos.icono);
-  // Verificar el contenido del FormData
-  formData.forEach((value, key) => {
-    console.log(key, value);
-  });
   try {
     const { data } = await clienteAxios.post("/api/admin/categorias", formData, {
       headers: {
@@ -39,8 +34,8 @@ const submitForm = async () => {
       },
     });
     toast.mostrarExito(data.message);
+    kioskoStore.agregarCategoria(data.categoria);
     router.push({ name: "categorias" });
-    console.log(data);
   } catch (error) {
     console.error(error);
   }

@@ -23,7 +23,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
   const obtenerCategorias = async () => {
     try {
       const { data } = await clienteAxios("/api/categorias", {
-
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -31,24 +30,21 @@ export const useKioskoStore = defineStore("kiosko", () => {
 
       categorias.value = data.data;
       console.log("Categorias", categorias.value);
-      
+
       categoriaActual.value = data.data[0];
     } catch (error) {
       console.log(error);
     }
   };
-  watch(
-    () => categorias.value, // Observar la propiedad `categorias`
-    (newValue, oldValue) => {
 
-    },
-    { deep: true } // Si los datos son objetos o arrays, usa deep para observar cambios internos.
-  );
   const seleccionarCategoriaActual = (id) => {
     const categoria = categorias.value.filter(
       (categoria) => categoria.id === id
     )[0];
     categoriaActual.value = categoria;
+  };
+  const agregarCategoria = (categoria) => {
+    categorias.value.push(categoria);
   };
 
   const toggleModal = () => {
@@ -87,6 +83,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
     pedido.value = pedidoActualizado;
     toast.mostrarExito("Producto eliminado del pedido");
   };
+  
   const crearPedido = async (total) => {
     try {
       const { data } = await clienteAxios.post(
@@ -120,44 +117,42 @@ export const useKioskoStore = defineStore("kiosko", () => {
     }
   };
 
-  const completarPedido = async(id) => {
+  const completarPedido = async (id) => {
     try {
       await clienteAxios.put(`/api/pedidos/${id}`, null, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.log("Error desde completar pedido", error);
     }
-  }
-  const editarProducto = async(id) => {
+  };
+
+  const editarProducto = async (id) => {
     try {
       await clienteAxios.put(`/api/productos/${id}`, null, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.log("Error desde producto agotado", error);
     }
-  }
+  };
 
   const eliminarProducto = async (id) => {
     try {
-      const {data} = await clienteAxios.delete(`/api/admin/productos/${id}`, {
+      const { data } = await clienteAxios.delete(`/api/admin/productos/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.mostrarExito(data.message);
-      
-      
     } catch (error) {
       console.log("Error desde eliminar producto", error);
     }
-    
-  }
+  };
 
   return {
     categorias,
@@ -166,6 +161,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
     pedido,
     categoriaActual,
     seleccionarCategoriaActual,
+    agregarCategoria,
     modal,
     toggleModal,
     seleccionarProducto,
@@ -175,6 +171,6 @@ export const useKioskoStore = defineStore("kiosko", () => {
     crearPedido,
     completarPedido,
     editarProducto,
-    eliminarProducto
+    eliminarProducto,
   };
 });
