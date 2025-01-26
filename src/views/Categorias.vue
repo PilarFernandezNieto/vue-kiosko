@@ -5,6 +5,13 @@ import { useKioskoStore } from "@/stores/kioskoStore";
 import { categorias } from "@/data/categorias";
 const kioskoStore = useKioskoStore();
 
+watch(
+  () => kioskoStore.categorias,
+  (categorias) => {
+    console.log("Categorias actualizadas", categorias);
+  }
+);
+
 </script>
 <template>
   <div>
@@ -32,7 +39,7 @@ const kioskoStore = useKioskoStore();
           />
           <div class="flex gap-4 justify-end">
             <RouterLink
-              :to="{ name: 'home', params: { id: categoria.id } }"
+              :to="{ name: 'editar-categoria', params: { id: categoria.id } }"
               class="bg-indigo-600 hover:bg-indigo-800 rounded text-white py-2 px-4"
               >Editar</RouterLink
             >

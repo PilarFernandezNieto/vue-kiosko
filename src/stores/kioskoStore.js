@@ -27,10 +27,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
       categorias.value = data.data;
-      console.log("Categorias", categorias.value);
-
       categoriaActual.value = data.data[0];
     } catch (error) {
       console.log(error);
@@ -45,6 +42,18 @@ export const useKioskoStore = defineStore("kiosko", () => {
   };
   const agregarCategoria = (categoria) => {
     categorias.value.push(categoria);
+  };
+  const actualizarCategoria = (categoriaActualizada) => {
+    console.log(categorias.value);
+    console.log(categoriaActualizada);
+    
+    const index = categorias.value.findIndex(
+      (categoriaState) => categoriaState.id === categoriaActualizada.id
+    );
+    if (index !== -1) {
+      // Actualiza la categoría en el array de categorías
+      categorias.value[index] = categoriaActualizada; // Usar spread operator para asegurarse de que Vue detecte el cambio
+    }
   };
 
   const toggleModal = () => {
@@ -162,6 +171,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
     categoriaActual,
     seleccionarCategoriaActual,
     agregarCategoria,
+    actualizarCategoria,
     modal,
     toggleModal,
     seleccionarProducto,

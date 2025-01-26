@@ -74,6 +74,11 @@ const router = createRouter({
           name: "nueva-categoria",
           component: () => import("@/views/NuevaCategoriaView.vue"),
         },
+        {
+          path: ":id/editar-categoria",
+          name: "editar-categoria",
+          component: () => import("@/views/EditarCategoriaView.vue"),
+        }
 
       ],
     },
