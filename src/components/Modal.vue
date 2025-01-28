@@ -52,7 +52,7 @@ const agregarPedidoAResumen = () => {
     toast.mostrarExito("Producto añadido al pedido");
   }
 };
-const imagenServer = computed(() => kiosco.producto.imagen.startsWith("http"));
+const imagenServer = computed(() => kiosko.producto.imagen.startsWith("http"));
 </script>
 
 <template>
@@ -76,8 +76,8 @@ const imagenServer = computed(() => kiosco.producto.imagen.startsWith("http"));
           <img
             :src="[
               imagenServer
-                ? kiosco.producto.imagen
-                : `/img/${kiosco.producto.imagen}.jpg`,
+                ? kiosko.producto.imagen
+                : `/img/${kiosko.producto.imagen}.jpg`,
             ]"
             class="rounded-md"
             alt="`producto_${kiosko.producto.nombre}`"
