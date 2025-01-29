@@ -65,7 +65,7 @@ const isAdmin = computed(() => route.fullPath.startsWith('/admin') ? true : fals
       >
         {{ agotado ? "Producto Agotado" : "Producto Disponible" }}
       </button>
-      <div v-if="isAdmin" class="flex justify-between gap-4 mt-5">
+      <div v-if="isAdmin" class="flex flex-col lg:flex-row justify-between gap-4 mt-5">
         <RouterLink :to="{name: 'editar-producto', params: {id: producto.id}}" class="bg-green-500 hover:bg-green-700  p-3 uppercase font-bold rounded-md w-full text-white text-center">Editar</RouterLink>
         <button class="bg-red-500 hover:bg-red-700  p-3 uppercase font-bold rounded-md w-full text-white" @click="kiosko.eliminarProducto(producto.id)">Borrar</button>
       </div>

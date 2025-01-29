@@ -54,7 +54,7 @@ const totalPages = computed(() => {
     <div v-if="isLoading" class="flex justify-center">
       <VueSpinner size="40" color="#16a34a" />
     </div>
-    <div class="grid gap-4 grid-cols-1 md:grid-cols-3 md:p-10">
+    <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:p-10">
       <div v-for="producto in productosAll" :key="producto.id">
         <Producto :producto="producto" :botonDisponible="true" />
       </div>

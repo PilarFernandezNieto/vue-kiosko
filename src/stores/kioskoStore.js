@@ -106,6 +106,7 @@ export const useKioskoStore = defineStore("kiosko", () => {
             };
           }),
         },
+        
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -128,15 +129,20 @@ export const useKioskoStore = defineStore("kiosko", () => {
 
   const completarPedido = async (id) => {
     try {
-      await clienteAxios.put(`/api/pedidos/${id}`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+  
+      console.log("Headers enviados:", headers);
+  
+      await clienteAxios.put(`/api/pedidos/${id}`, null, { headers });
+  
+      toast.mostrarExito("Pedido completado");
     } catch (error) {
       console.log("Error desde completar pedido", error);
     }
   };
+  
 
   const editarProducto = async (id) => {
     try {
